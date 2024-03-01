@@ -1,0 +1,66 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                   String                @unique @default(uuid())
+  email                String                @unique
+  password             String
+  refreshToken         String?               @map("refresh_token")
+  lastSession          DateTime              @default(now()) @map("lat_session")
+  hasConfirmedEmail    Boolean               @default(false) @map("has_confirmed_email")
+  createdAt            DateTime              @default(now()) @map("created_at")
+  updatedAt            DateTime              @default(now()) @updatedAt @map("updated_at")
+  account              Account?
+  emailValidationCodes EmailValidationCode[]
+
+  @@map("user")
+}
+
+model Account {
+  id                     String   @unique @default(uuid())
+  hasActiveNotifications Boolean  @default(false) @map("has_active_notifications")
+  createdAt              DateTime @default(now()) @map("created_at")
+  updatedAt              DateTime @default(now()) @updatedAt @map("updated_at")
+  favoriteVehicles       String[] @map("favorite_vehicles")
+  userId                 String   @unique
+  user                   User     @relation(fields: [userId], references: [id])
+  searches               Search[]
+
+  @@map("account")
+}
+
+model Search {
+  id        String   @unique @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  text      String
+  search    Json
+  account   Account? @relation(fields: [accountId], references: [id])
+  accountId String?  @map("account_id")
+
+  @@map("search")
+}
+
+model EmailValidationCode {
+  id             Int      @id @default(autoincrement())
+  uuid           String   @unique @default(uuid())
+  code           String
+  expirationTime DateTime @map("expiration_time")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @default(now()) @updatedAt @map("updated_at")
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String   @map("user_id")
+
+  @@map("email_validation_code")
+}
