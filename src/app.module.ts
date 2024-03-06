@@ -1,10 +1,19 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
+import * as Joi from 'joi';
+import { EnvSettings, envSettings } from './core/settings/env.settings';
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    AuthModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      validationSchema: Joi.object<EnvSettings>(envSettings),
+      envFilePath: '.env',
+    }),
+  ],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
