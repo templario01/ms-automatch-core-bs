@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { createHash, randomBytes } from 'crypto';
 import { AccessToken } from '../../domain/entities/access-token';
-import { EnvConfigService } from '../../../core/settings/env-config.service';
+import { EnvConfigService } from '../../../../core/settings/env-config.service';
 
 @Injectable()
 export class AuthService {

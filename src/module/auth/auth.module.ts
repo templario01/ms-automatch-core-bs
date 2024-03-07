@@ -2,14 +2,14 @@ import { Module } from '@nestjs/common';
 import { AuthUseCase } from './application/auth.use-case';
 import { IAuthRepository } from './domain/repositories/auth.repository';
 import { PrismaAuthRepository } from './infrastructure/prisma-auth.repository';
-import { PrismaModule } from '../core/database/prisma.module';
+import { PrismaModule } from '../../core/database/prisma.module';
 import { AuthController } from './infrastructure/api/controllers/auth.controller';
 import { IVerificationCodeRepository } from './domain/repositories/verification-code.repository';
 import { PrismaVerificationCodeRepository } from './infrastructure/prisma-verification-code.repository';
 import { AuthService } from './application/services/auth.service';
 import { JwtModule } from '@nestjs/jwt';
-import { EnvConfigModule } from '../core/settings/env-config.module';
-import { EnvConfigService } from '../core/settings/env-config.service';
+import { EnvConfigModule } from '../../core/settings/env-config.module';
+import { EnvConfigService } from '../../core/settings/env-config.service';
 
 const useCases = [AuthUseCase];
 const repositories = [
