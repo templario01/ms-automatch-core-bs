@@ -8,7 +8,7 @@ export class User {
   readonly lastSession: Date;
   readonly hasConfirmedEmail: boolean;
 
-  static mapToDto(data: PrismaUser): User {
+  static mapToObject(data: PrismaUser): User {
     if (!data) return null;
     return plainToInstance(User, {
       id: data.id,

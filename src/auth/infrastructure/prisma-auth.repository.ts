@@ -15,7 +15,23 @@ export class PrismaAuthRepository implements IAuthRepository {
         },
       },
     });
-    return User.mapToDto(user);
+    return User.mapToObject(user);
+  }
+
+  async findUserByVerificationCode(code: string): Promise<User> {
+    const user = await this.prisma.user.findFirst({
+      where: {
+        emailValidationCodes: {
+          some: {
+            code,
+            expirationTime: {
+              gt: new Date(),
+            },
+          },
+        },
+      },
+    });
+    return User.mapToObject(user);
   }
 
   async createUser(email: string, encryptedPassword: string): Promise<User> {
@@ -26,6 +42,14 @@ export class PrismaAuthRepository implements IAuthRepository {
         password: encryptedPassword,
       },
     });
-    return User.mapToDto(newUser);
+    return User.mapToObject(newUser);
+  }
+
+  async validateAccount(id: string): Promise<User> {
+    const user = await this.prisma.user.update({
+      where: { id },
+      data: { hasConfirmedEmail: true },
+    });
+    return User.mapToObject(user);
   }
 }

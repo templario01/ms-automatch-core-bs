@@ -6,6 +6,10 @@ import { PrismaModule } from '../core/database/prisma.module';
 import { AuthController } from './infrastructure/api/controllers/auth.controller';
 import { IVerificationCodeRepository } from './domain/repositories/verification-code.repository';
 import { PrismaVerificationCodeRepository } from './infrastructure/prisma-verification-code.repository';
+import { AuthService } from './application/services/auth.service';
+import { JwtModule } from '@nestjs/jwt';
+import { EnvConfigModule } from '../core/settings/env-config.module';
+import { EnvConfigService } from '../core/settings/env-config.service';
 
 const useCases = [AuthUseCase];
 const repositories = [
@@ -17,8 +21,24 @@ const repositories = [
 ];
 
 @Module({
-  imports: [PrismaModule],
+  imports: [
+    PrismaModule,
+    EnvConfigModule,
+    JwtModule.registerAsync({
+      imports: [EnvConfigModule],
+      inject: [EnvConfigService],
+      useFactory: async (envConfigService: EnvConfigService) => {
+        const { expirationTime, secret } = envConfigService.jwtConfig;
+
+        return {
+          global: true,
+          signOptions: { expiresIn: expirationTime },
+          secret,
+        };
+      },
+    }),
+  ],
   controllers: [AuthController],
-  providers: [...useCases, ...repositories],
+  providers: [AuthService, ...useCases, ...repositories],
 })
 export class AuthModule {}

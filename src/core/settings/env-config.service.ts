@@ -11,4 +11,11 @@ export class EnvConfigService {
       environment: this.configService.get<string>('NODE_ENV'),
     };
   }
+
+  get jwtConfig() {
+    return {
+      secret: this.configService.get<string>('JWT_SECRET'),
+      expirationTime: this.configService.get<string>('JWT_EXPIRATION_TIME'),
+    };
+  }
 }
