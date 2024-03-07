@@ -6,6 +6,7 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -26,6 +27,14 @@ async function bootstrap() {
 
   const port = app.get(ConfigService).get<number>('PORT');
   const logger = new Logger('Bootstrap');
+
+  const config = new DocumentBuilder()
+    .setTitle('Automatch Core API')
+    .setDescription('REST API for Account info and authentication')
+    .setVersion('1.0')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
 
   await app.listen(port, () => {
     logger.log(`Server running on port: ${port} 🚀 ✨✨`);

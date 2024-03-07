@@ -1,6 +1,11 @@
 import { EmailVerificationCode } from '@prisma/client';
 import { plainToInstance } from 'class-transformer';
-import { NotificationStatus } from '../../infrastructure/prisma-verification-code.repository';
+
+export enum NotificationStatus {
+  READY_TO_SEND = 'READY_TO_SEND',
+  FAILED = 'FAILED',
+  SENT = 'SENT',
+}
 
 export class VerificationCode {
   readonly id: string;

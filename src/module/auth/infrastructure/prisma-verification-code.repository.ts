@@ -1,14 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../core/database/prisma.service';
 import { randAlphaNumeric } from '@ngneat/falso';
-import { VerificationCode } from '../domain/entities/validation-code';
+import {
+  NotificationStatus,
+  VerificationCode,
+} from '../domain/entities/validation-code';
 import { IVerificationCodeRepository } from '../domain/repositories/verification-code.repository';
-
-export enum NotificationStatus {
-  READY_TO_SEND = 'READY_TO_SEND',
-  FAILED = 'FAILED',
-  SENT = 'SENT',
-}
 
 @Injectable()
 export class PrismaVerificationCodeRepository
