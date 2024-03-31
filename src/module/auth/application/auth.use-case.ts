@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ConflictException,
   ForbiddenException,
+  Inject,
   Injectable,
 } from '@nestjs/common';
 import { IAuthRepository } from '../domain/repositories/auth.repository';
@@ -10,6 +11,9 @@ import { IVerificationCodeRepository } from '../domain/repositories/verification
 import { VerificationCode } from '../domain/entities/validation-code';
 import { CreateUser } from '../domain/entities/create-user';
 import { AccessToken } from '../domain/entities/access-token';
+import { ClientProxy } from '@nestjs/microservices';
+import { AUTOMATCH_NOTIFICATION_SERVICE } from '../../../core/event-broker/dtos/services';
+import { lastValueFrom, tap } from 'rxjs';
 
 @Injectable()
 export class AuthUseCase {
@@ -17,10 +21,25 @@ export class AuthUseCase {
     private readonly authService: AuthService,
     private readonly authRepository: IAuthRepository,
     private readonly verificationCodeRepository: IVerificationCodeRepository,
+    @Inject(AUTOMATCH_NOTIFICATION_SERVICE)
+    private notificationClient: ClientProxy,
   ) {}
 
   async register(data: CreateUser): Promise<VerificationCode> {
     const { email, password } = data;
+    await lastValueFrom(
+      this.notificationClient
+        .emit('notify_email', {
+          data,
+        })
+        .pipe(
+          tap(() => {
+            console.log('sending... ', data);
+          }),
+        ),
+    );
+
+    return null;
     const user = await this.authRepository.findUserByEmail(email);
     if (user?.hasConfirmedEmail === true) {
       throw new ConflictException('email already registered');
