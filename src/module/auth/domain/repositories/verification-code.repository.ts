@@ -5,7 +5,7 @@ import { VerificationCode } from '../entities/validation-code';
 export abstract class IVerificationCodeRepository {
   abstract generateVerificationCode(): Promise<string>;
   abstract createVerificationCode(
-    userId: string,
+    email: string,
     code: string,
   ): Promise<VerificationCode>;
 }

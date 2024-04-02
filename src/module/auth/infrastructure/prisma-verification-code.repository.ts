@@ -35,7 +35,7 @@ export class PrismaVerificationCodeRepository
   }
 
   async createVerificationCode(
-    userId: string,
+    email: string,
     code: string,
   ): Promise<VerificationCode> {
     const { currentTime, MINUTES, MILISECONDS } = {
@@ -49,7 +49,7 @@ export class PrismaVerificationCodeRepository
 
     const validationCode = await this.prisma.emailVerificationCode.create({
       data: {
-        userId,
+        user: { connect: { email } },
         code,
         expirationTime,
         notificationStatus: NotificationStatus.READY_TO_SEND,

@@ -62,27 +62,38 @@ export class AuthUseCase {
   ): Promise<VerificationCode> {
     const encryptedPassword = this.authService.encryptPassword(password);
     const user = await this.authRepository.createUser(email, encryptedPassword);
-    return this.createNewVerificationCode(user.id);
+    return this.createNewVerificationCode(user.email);
   }
 
-  private async createNewVerificationCode(userId: string) {
+  private async createNewVerificationCode(email: string) {
     const randomCode =
       await this.verificationCodeRepository.generateVerificationCode();
     const payload = Buffer.from(
-      JSON.stringify({ userId, verificationCode: randomCode }),
+      JSON.stringify({ email, verificationCode: randomCode }),
     ).toString('base64');
     await lastValueFrom(
-      this.notificationClient.emit('email_notify_code', payload).pipe(
+      this.notificationClient.emit('notify_verification_code', payload).pipe(
         tap(() => {
           this.logger.verbose(
-            `[Producer] Sending new verification code for user: ${userId}`,
+            `[Producer] Sending new verification code to: ${this.obfuscateEmail(email)}`,
           );
         }),
       ),
     );
     return this.verificationCodeRepository.createVerificationCode(
-      userId,
+      email,
       randomCode,
     );
+  }
+
+  private obfuscateEmail(email: string): string {
+    const [username, domain] = email.split('@');
+    let obfuscateEmail: string;
+    if (username.length <= 3) {
+      obfuscateEmail = '***';
+    } else {
+      obfuscateEmail = username.substring(0, 3) + '***';
+    }
+    return obfuscateEmail + '@' + domain;
   }
 }
