@@ -4,6 +4,7 @@ import {
   ForbiddenException,
   Inject,
   Injectable,
+  Logger,
 } from '@nestjs/common';
 import { IAuthRepository } from '../domain/repositories/auth.repository';
 import { AuthService } from './services/auth.service';
@@ -17,6 +18,8 @@ import { lastValueFrom, tap } from 'rxjs';
 
 @Injectable()
 export class AuthUseCase {
+  private readonly logger = new Logger(AuthUseCase.name);
+
   constructor(
     private readonly authService: AuthService,
     private readonly authRepository: IAuthRepository,
@@ -27,19 +30,6 @@ export class AuthUseCase {
 
   async register(data: CreateUser): Promise<VerificationCode> {
     const { email, password } = data;
-    await lastValueFrom(
-      this.notificationClient
-        .emit('notify_email', {
-          data,
-        })
-        .pipe(
-          tap(() => {
-            console.log('sending... ', data);
-          }),
-        ),
-    );
-
-    return null;
     const user = await this.authRepository.findUserByEmail(email);
     if (user?.hasConfirmedEmail === true) {
       throw new ConflictException('email already registered');
@@ -72,10 +62,26 @@ export class AuthUseCase {
   ): Promise<VerificationCode> {
     const encryptedPassword = this.authService.encryptPassword(password);
     const user = await this.authRepository.createUser(email, encryptedPassword);
+    return this.createNewVerificationCode(user.id);
+  }
+
+  private async createNewVerificationCode(userId: string) {
     const randomCode =
       await this.verificationCodeRepository.generateVerificationCode();
+    const payload = Buffer.from(
+      JSON.stringify({ userId, verificationCode: randomCode }),
+    ).toString('base64');
+    await lastValueFrom(
+      this.notificationClient.emit('email_notify_code', payload).pipe(
+        tap(() => {
+          this.logger.verbose(
+            `[Producer] Sending new verification code for user: ${userId}`,
+          );
+        }),
+      ),
+    );
     return this.verificationCodeRepository.createVerificationCode(
-      user.id,
+      userId,
       randomCode,
     );
   }
