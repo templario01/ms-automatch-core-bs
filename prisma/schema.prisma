@@ -6,6 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["jsonProtocol"]
 }
 
 datasource db {
@@ -35,7 +36,7 @@ model Account {
   updatedAt              DateTime @default(now()) @updatedAt @map("updated_at")
   favoriteVehicles       String[] @map("favorite_vehicles")
   userId                 String   @unique
-  user                   User     @relation(fields: [userId], references: [id])
+  user                   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   searches               Search[]
 
   @@map("account")
@@ -46,7 +47,7 @@ model Search {
   createdAt DateTime @default(now()) @map("created_at")
   text      String
   search    Json
-  account   Account? @relation(fields: [accountId], references: [id])
+  account   Account? @relation(fields: [accountId], references: [id], onDelete: Cascade)
   accountId String?  @map("account_id")
 
   @@map("search")

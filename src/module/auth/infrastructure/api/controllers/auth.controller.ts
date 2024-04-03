@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { AuthUseCase } from '../../../application/auth.use-case';
-import { CreateUserDto } from '../dtos/request/create-user.dto';
+import { CreateUserDto, UserEmailDto } from '../dtos/request/create-user.dto';
 import { ValidateCodeDto } from '../dtos/request/validate-code.dto';
 import { VerificationCodeDto } from '../dtos/response/verification-code.dto';
 import {
@@ -36,5 +36,16 @@ export class AuthController {
     @Body() validateCode: ValidateCodeDto,
   ): Promise<AccessTokenDto> {
     return this.authUseCase.confirmAccount(validateCode.code);
+  }
+
+  @ApiOperation({ summary: 'Resend verification code' })
+  @ApiCreatedResponse({
+    type: VerificationCodeDto,
+  })
+  @Post('resend-verification-code')
+  async resendVerificationCode(
+    @Body() { email }: UserEmailDto,
+  ): Promise<VerificationCodeDto> {
+    return this.authUseCase.resendEmailVerification(email);
   }
 }

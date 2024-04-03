@@ -43,7 +43,8 @@ export class AuthUseCase {
   }
 
   async confirmAccount(code: string): Promise<AccessToken> {
-    const user = await this.authRepository.findUserByVerificationCode(code);
+    const user =
+      await this.authRepository.findUserWithActiveVerificationCode(code);
     if (!user) {
       throw new ForbiddenException('Código inválido');
     }
@@ -56,6 +57,19 @@ export class AuthUseCase {
     return this.authService.createAccessToken(payload);
   }
 
+  async resendEmailVerification(email: string): Promise<VerificationCode> {
+    const user = await this.authRepository.findUserByEmail(email);
+    if (!user) {
+      throw new BadRequestException(
+        'Por favor regresa al step 1 del formulario de creación de cuenta y registra tu correo',
+      );
+    }
+    if (user.hasConfirmedEmail === true) {
+      throw new BadRequestException('Correo electrónico ya validado');
+    }
+    return this.createNewVerificationCode(user.email);
+  }
+
   private async createUser(
     email: string,
     password: string,
@@ -65,7 +79,9 @@ export class AuthUseCase {
     return this.createNewVerificationCode(user.email);
   }
 
-  private async createNewVerificationCode(email: string) {
+  private async createNewVerificationCode(
+    email: string,
+  ): Promise<VerificationCode> {
     const randomCode =
       await this.verificationCodeRepository.generateVerificationCode();
     const payload = Buffer.from(

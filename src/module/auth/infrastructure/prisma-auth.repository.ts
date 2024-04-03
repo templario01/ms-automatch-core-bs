@@ -18,14 +18,14 @@ export class PrismaAuthRepository implements IAuthRepository {
     return User.mapToObject(user);
   }
 
-  async findUserByVerificationCode(code: string): Promise<User> {
+  async findUserWithActiveVerificationCode(code: string): Promise<User> {
     const user = await this.prisma.user.findFirst({
       where: {
         emailValidationCodes: {
           some: {
             code,
             expirationTime: {
-              gt: new Date(),
+              gte: new Date(),
             },
           },
         },
@@ -46,10 +46,14 @@ export class PrismaAuthRepository implements IAuthRepository {
   }
 
   async validateAccount(id: string): Promise<User> {
-    const user = await this.prisma.user.update({
-      where: { id },
-      data: { hasConfirmedEmail: true },
-    });
+    const [user] = await this.prisma.$transaction([
+      this.prisma.user.update({
+        where: { id },
+        data: { hasConfirmedEmail: true },
+      }),
+      this.prisma.account.create({ data: { userId: id } }),
+    ]);
+
     return User.mapToObject(user);
   }
 }
