@@ -56,6 +56,27 @@ export class PrismaVerificationCodeRepository
       },
     });
 
-    return VerificationCode.mapToDto(validationCode);
+    return VerificationCode.mapToObject(validationCode);
+  }
+
+  async findActiveCodes(userId: string): Promise<VerificationCode[]> {
+    const { currentTime, MINUTES, MILISECONDS } = {
+      currentTime: new Date(),
+      MINUTES: 2,
+      MILISECONDS: 60000,
+    };
+    const twoMinutesAgoTime = new Date(
+      currentTime.getTime() - MINUTES * MILISECONDS,
+    );
+    const codes = await this.prisma.emailVerificationCode.findMany({
+      where: {
+        userId,
+        createdAt: {
+          gte: twoMinutesAgoTime,
+        },
+      },
+    });
+
+    return VerificationCode.mapToObjects(codes);
   }
 }

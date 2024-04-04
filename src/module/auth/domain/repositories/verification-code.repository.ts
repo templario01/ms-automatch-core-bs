@@ -8,4 +8,5 @@ export abstract class IVerificationCodeRepository {
     email: string,
     code: string,
   ): Promise<VerificationCode>;
+  abstract findActiveCodes(userId: string): Promise<VerificationCode[]>;
 }

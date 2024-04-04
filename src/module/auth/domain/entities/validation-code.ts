@@ -13,12 +13,16 @@ export class VerificationCode {
   readonly expirationTime: Date;
   readonly createdAt: Date;
 
-  static mapToDto(data: EmailVerificationCode): VerificationCode {
+  static mapToObject(data: EmailVerificationCode): VerificationCode {
     return plainToInstance(VerificationCode, {
       id: data.id,
       notificationStatus: data.notificationStatus,
       expirationTime: data.expirationTime,
       createdAt: data.createdAt,
     });
+  }
+
+  static mapToObjects(data: EmailVerificationCode[]): VerificationCode[] {
+    return data.map((code) => VerificationCode.mapToObject(code));
   }
 }

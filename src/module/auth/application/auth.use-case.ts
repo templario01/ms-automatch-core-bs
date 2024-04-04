@@ -92,6 +92,15 @@ export class AuthUseCase {
     if (user.hasConfirmedEmail === true) {
       throw new BadRequestException('Correo electrónico ya validado');
     }
+    const activeCodes = await this.verificationCodeRepository.findActiveCodes(
+      user.id,
+    );
+    if (activeCodes.length > 0) {
+      throw new BadRequestException(
+        'Ya solicitaste un código, debes esperar 2 minutos para solitar un nuevo código',
+      );
+    }
+
     return this.createNewVerificationCode(user.email);
   }
 
