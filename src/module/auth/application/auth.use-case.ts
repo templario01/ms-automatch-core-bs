@@ -5,6 +5,7 @@ import {
   Inject,
   Injectable,
   Logger,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { IAuthRepository } from '../domain/repositories/auth.repository';
 import { AuthService } from './services/auth.service';
@@ -15,6 +16,7 @@ import { AccessToken } from '../domain/entities/access-token';
 import { ClientProxy } from '@nestjs/microservices';
 import { AUTOMATCH_NOTIFICATION_SERVICE } from '../../../core/event-broker/dtos/services';
 import { lastValueFrom, tap } from 'rxjs';
+import { UserSignIn } from '../domain/entities/sign-in';
 
 @Injectable()
 export class AuthUseCase {
@@ -27,6 +29,29 @@ export class AuthUseCase {
     @Inject(AUTOMATCH_NOTIFICATION_SERVICE)
     private notificationClient: ClientProxy,
   ) {}
+
+  async login(data: UserSignIn): Promise<AccessToken> {
+    const { email, password, userAgent } = data;
+    const user = await this.authRepository.findUserByEmail(email);
+    if (!user) {
+      throw new UnauthorizedException(
+        'Correo electrónico o contraseña no válidos',
+      );
+    }
+    if (user.hasConfirmedEmail === false) {
+      throw new BadRequestException(
+        '¡Ups!, parece que aún no haz verificado tu cuenta',
+      );
+    }
+    const isValidPassword = await this.authService.comparePasswords(
+      password,
+      user.encryptedPassword,
+    );
+    if (!isValidPassword) {
+      throw new UnauthorizedException('Contraseña inválida');
+    }
+    return this.registerNewSession(user.id, user.email, userAgent);
+  }
 
   async register(data: CreateUser): Promise<VerificationCode> {
     const { email, password } = data;
@@ -70,11 +95,24 @@ export class AuthUseCase {
     return this.createNewVerificationCode(user.email);
   }
 
+  private async registerNewSession(
+    userId: string,
+    email: string,
+    userAgent: string,
+  ): Promise<AccessToken> {
+    const payload = { username: email, sub: userId };
+    await this.authRepository.registerSession(userId);
+    this.logger.verbose(
+      `New session registered: ${JSON.stringify({ userId, userAgent })}`,
+    );
+    return this.authService.createAccessToken(payload);
+  }
+
   private async createUser(
     email: string,
     password: string,
   ): Promise<VerificationCode> {
-    const encryptedPassword = this.authService.encryptPassword(password);
+    const encryptedPassword = await this.authService.encryptPassword(password);
     const user = await this.authRepository.createUser(email, encryptedPassword);
     return this.createNewVerificationCode(user.email);
   }

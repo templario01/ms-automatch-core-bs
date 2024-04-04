@@ -1,4 +1,3 @@
-export class CreateUser {
-  readonly email: string;
-  readonly password: string;
-}
+import { UserSignIn } from './sign-in';
+
+export class CreateUser extends UserSignIn {}

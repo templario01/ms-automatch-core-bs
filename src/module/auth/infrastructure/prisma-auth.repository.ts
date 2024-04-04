@@ -56,4 +56,15 @@ export class PrismaAuthRepository implements IAuthRepository {
 
     return User.mapToObject(user);
   }
+
+  async registerSession(id: string): Promise<void> {
+    this.prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        lastSession: new Date(),
+      },
+    });
+  }
 }

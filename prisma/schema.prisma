@@ -5,7 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["jsonProtocol"]
 }
 
@@ -15,14 +15,14 @@ datasource db {
 }
 
 model User {
-  id                   String                @unique @default(uuid())
-  email                String                @unique
+  id                   String                  @id @unique @default(uuid())
+  email                String                  @unique
   password             String
-  refreshToken         String?               @map("refresh_token")
-  lastSession          DateTime              @default(now()) @map("lat_session")
-  hasConfirmedEmail    Boolean               @default(false) @map("has_confirmed_email")
-  createdAt            DateTime              @default(now()) @map("created_at")
-  updatedAt            DateTime              @default(now()) @updatedAt @map("updated_at")
+  refreshToken         String?                 @map("refresh_token")
+  lastSession          DateTime                @default(now()) @map("lat_session")
+  hasConfirmedEmail    Boolean                 @default(false) @map("has_confirmed_email")
+  createdAt            DateTime                @default(now()) @map("created_at")
+  updatedAt            DateTime                @default(now()) @updatedAt @map("updated_at")
   account              Account?
   emailValidationCodes EmailVerificationCode[]
 
@@ -30,7 +30,7 @@ model User {
 }
 
 model Account {
-  id                     String   @unique @default(uuid())
+  id                     String   @id @unique @default(uuid())
   hasActiveNotifications Boolean  @default(false) @map("has_active_notifications")
   createdAt              DateTime @default(now()) @map("created_at")
   updatedAt              DateTime @default(now()) @updatedAt @map("updated_at")
@@ -43,7 +43,7 @@ model Account {
 }
 
 model Search {
-  id        String   @unique @default(uuid())
+  id        String   @id @unique @default(uuid())
   createdAt DateTime @default(now()) @map("created_at")
   text      String
   search    Json
@@ -54,7 +54,7 @@ model Search {
 }
 
 model EmailVerificationCode {
-  id                 String             @unique @default(uuid())
+  id                 String             @id @unique @default(uuid())
   code               String
   notificationStatus NotificationStatus
   expirationTime     DateTime           @map("expiration_time")

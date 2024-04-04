@@ -1,9 +1,15 @@
 import { User as PrismaUser } from '@prisma/client';
 import { plainToInstance } from 'class-transformer';
 
+export enum AuthFlow {
+  LOGIN = 'LOGIN',
+  REGISTER = 'REGISTER',
+}
+
 export class User {
   readonly id: string;
   readonly email: string;
+  readonly encryptedPassword?: string;
   readonly refreshToken?: string;
   readonly lastSession: Date;
   readonly hasConfirmedEmail: boolean;
@@ -16,6 +22,7 @@ export class User {
       hasConfirmedEmail: data.hasConfirmedEmail,
       refreshToken: data.refreshToken,
       lastSession: data.lastSession,
+      encryptedPassword: data.password,
     });
   }
 }
