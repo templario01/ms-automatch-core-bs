@@ -30,27 +30,25 @@ model User {
 }
 
 model Account {
-  id                     String   @id @unique @default(uuid())
-  hasActiveNotifications Boolean  @default(false) @map("has_active_notifications")
-  createdAt              DateTime @default(now()) @map("created_at")
-  updatedAt              DateTime @default(now()) @updatedAt @map("updated_at")
-  favoriteVehicles       String[] @map("favorite_vehicles")
-  userId                 String   @unique
-  user                   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  searches               Search[]
+  id                     String            @id @unique @default(uuid())
+  hasActiveNotifications Boolean           @default(false) @map("has_active_notifications")
+  createdAt              DateTime          @default(now()) @map("created_at")
+  updatedAt              DateTime          @default(now()) @updatedAt @map("updated_at")
+  favoriteVehicles       FavoriteVehicle[]
+  userId                 String            @unique
+  user                   User              @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("account")
 }
 
-model Search {
-  id        String   @id @unique @default(uuid())
-  createdAt DateTime @default(now()) @map("created_at")
-  text      String
-  search    Json
-  account   Account? @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  accountId String?  @map("account_id")
+model FavoriteVehicle {
+  id                        String             @id @unique @default(uuid())
+  Account                   Account?           @relation(fields: [accountId], references: [id])
+  vehicleId                 String
+  deletedNotificationStatus NotificationStatus @default(WAITING)
+  accountId                 String?
 
-  @@map("search")
+    @@map("favorite_vehicle")
 }
 
 model EmailVerificationCode {
@@ -67,6 +65,7 @@ model EmailVerificationCode {
 }
 
 enum NotificationStatus {
+  WAITING
   READY_TO_SEND
   FAILED
   SENT
