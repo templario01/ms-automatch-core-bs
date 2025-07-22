@@ -48,7 +48,7 @@ model FavoriteVehicle {
   deletedNotificationStatus NotificationStatus @default(WAITING)
   accountId                 String?
 
-    @@map("favorite_vehicle")
+  @@map("favorite_vehicle")
 }
 
 model EmailVerificationCode {
