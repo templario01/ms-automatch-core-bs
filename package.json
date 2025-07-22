@@ -30,7 +30,7 @@
     "@nestjs/platform-express": "^11.1.5",
     "@nestjs/platform-fastify": "^11.1.5",
     "@nestjs/swagger": "^11.2.0",
-    "@ngneat/falso": "^7.2.0",
+    "@ngneat/falso": "^8.0.0",
     "@prisma/client": "^6.0.0",
     "amqp-connection-manager": "^4.1.14",
     "amqplib": "^0.10.3",
