@@ -18,4 +18,10 @@ export class EnvConfigService {
       expirationTime: this.configService.get<string>('JWT_EXPIRATION_TIME'),
     };
   }
+
+  get soldInventoryConfig() {
+    return {
+      liveLivenessTimeInMinutes: this.configService.get<string>('LIVE_LIVENESS_TIME_IN_MINUTES'),
+    };
+  }
 }
