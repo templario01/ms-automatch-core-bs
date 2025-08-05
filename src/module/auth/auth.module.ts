@@ -11,7 +11,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { EnvConfigModule } from '../../core/settings/env-config.module';
 import { EnvConfigService } from '../../core/settings/env-config.service';
 import { BrokerModule } from '../../core/event-broker/broker.module';
-import { AUTOMATCH_NOTIFICATION_SERVICE } from '../../core/event-broker/dtos/services';
+import { AUTOMATCH_EMAIL_NOTIFICATION } from '../../core/event-broker/dtos/services';
 
 const useCases = [AuthUseCase];
 const repositories = [
@@ -26,7 +26,7 @@ const repositories = [
   imports: [
     PrismaModule,
     EnvConfigModule,
-    BrokerModule.register({ name: AUTOMATCH_NOTIFICATION_SERVICE }),
+    BrokerModule.register({ name: AUTOMATCH_EMAIL_NOTIFICATION }),
     JwtModule.registerAsync({
       imports: [EnvConfigModule],
       inject: [EnvConfigService],

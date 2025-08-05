@@ -23,7 +23,7 @@ export class BrokerModule {
             useFactory: (configService: ConfigService) => {
               const logger = new Logger('BrokerModule');
               const currentQueue = configService.get<string>(`RABBIT_MQ_${name}_QUEUE`);
-              logger.log(`Connecting to RabbitMQ queue: ${currentQueue} 📦`);
+              logger.log(`[Producer] Connecting to RabbitMQ queue: ${currentQueue} 📦`);
               return {
                 transport: Transport.RMQ,
                 options: {

@@ -14,7 +14,7 @@ import { VerificationCode } from '../domain/entities/validation-code';
 import { CreateUser } from '../domain/entities/create-user';
 import { AccessToken } from '../domain/entities/access-token';
 import { ClientProxy } from '@nestjs/microservices';
-import { AUTOMATCH_NOTIFICATION_SERVICE } from '../../../core/event-broker/dtos/services';
+import { AUTOMATCH_EMAIL_NOTIFICATION } from '../../../core/event-broker/dtos/services';
 import { lastValueFrom, tap } from 'rxjs';
 import { UserSignIn } from '../domain/entities/sign-in';
 import { obfuscateEmail } from 'src/core/utils/obfuscate.utils';
@@ -27,7 +27,7 @@ export class AuthUseCase {
     private readonly authService: AuthService,
     private readonly authRepository: IAuthRepository,
     private readonly verificationCodeRepository: IVerificationCodeRepository,
-    @Inject(AUTOMATCH_NOTIFICATION_SERVICE)
+    @Inject(AUTOMATCH_EMAIL_NOTIFICATION)
     private notificationClient: ClientProxy,
   ) {}
 
@@ -136,7 +136,7 @@ export class AuthUseCase {
       JSON.stringify({ email, verificationCode: randomCode }),
     ).toString('base64');
     await lastValueFrom(
-      this.notificationClient.emit('notify_verification_code', payload).pipe(
+      this.notificationClient.emit('notify_user_email', payload).pipe(
         tap(() => {
           this.logger.verbose(
             `[Producer] Sending new verification code to: ${obfuscateEmail(email)}`,
