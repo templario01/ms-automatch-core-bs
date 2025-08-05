@@ -12,6 +12,7 @@ export class BrokerService {
       options: {
         urls: [this.configService.get<string>('RABBIT_MQ_HOST')],
         queue: this.configService.get<string>(`RABBIT_MQ_${queue}_QUEUE`),
+        exchangeType: 'direct',
         noAck,
         persistent: true,
       },

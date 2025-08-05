@@ -17,6 +17,7 @@ import { ClientProxy } from '@nestjs/microservices';
 import { AUTOMATCH_NOTIFICATION_SERVICE } from '../../../core/event-broker/dtos/services';
 import { lastValueFrom, tap } from 'rxjs';
 import { UserSignIn } from '../domain/entities/sign-in';
+import { obfuscateEmail } from 'src/core/utils/obfuscate.utils';
 
 @Injectable()
 export class AuthUseCase {
@@ -138,7 +139,7 @@ export class AuthUseCase {
       this.notificationClient.emit('notify_verification_code', payload).pipe(
         tap(() => {
           this.logger.verbose(
-            `[Producer] Sending new verification code to: ${this.obfuscateEmail(email)}`,
+            `[Producer] Sending new verification code to: ${obfuscateEmail(email)}`,
           );
         }),
       ),
@@ -147,16 +148,5 @@ export class AuthUseCase {
       email,
       randomCode,
     );
-  }
-
-  private obfuscateEmail(email: string): string {
-    const [username, domain] = email.split('@');
-    let obfuscateEmail: string;
-    if (username.length <= 3) {
-      obfuscateEmail = '***';
-    } else {
-      obfuscateEmail = username.substring(0, 3) + '***';
-    }
-    return obfuscateEmail + '@' + domain;
   }
 }

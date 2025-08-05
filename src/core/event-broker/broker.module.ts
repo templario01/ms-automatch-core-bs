@@ -28,6 +28,7 @@ export class BrokerModule {
                 transport: Transport.RMQ,
                 options: {
                   urls: [configService.get<string>('RABBIT_MQ_HOST')],
+                  exchangeType: 'direct',
                   queue: currentQueue,
                 },
               };

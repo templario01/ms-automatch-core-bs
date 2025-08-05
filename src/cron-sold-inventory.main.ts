@@ -1,18 +1,23 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { Logger, ValidationPipe } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { BrokerService } from './core/event-broker/broker.service';
-import { SoldInventoryModule } from './app-sold-inventory.module';
+import { AppSoldInventoryModule } from './app-sold-inventory.module';
 import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { AUTOMATCH_SOLD_INVENTORY } from './core/event-broker/dtos/services';
 
 async function bootstrap() {
-  const app =
-    await NestFactory.create<NestFastifyApplication>(SoldInventoryModule);
+  const app = await NestFactory.create<NestFastifyApplication>(
+    AppSoldInventoryModule,
+  );
   const logger = new Logger('Bootstrap');
+
   const eventBroker = app.get<BrokerService>(BrokerService);
-  app.connectMicroservice(eventBroker.getOptions(AUTOMATCH_SOLD_INVENTORY));
+  const connection = eventBroker.getOptions(AUTOMATCH_SOLD_INVENTORY);
+  app.connectMicroservice(connection);
+  logger.log(
+    `Connecting to RabbitMQ on default Exchange 📦✨✨ : ${JSON.stringify({ queue: connection.options.queue, routingKey: connection.options.queue, exchangeType: connection.options.exchangeType })}`,
+  );
 
   const port = app.get(ConfigService).get<number>('PORT');
   const liveLivenessTimeInMillis =
@@ -27,6 +32,5 @@ async function bootstrap() {
     logger.log('CronJob Sold Inventory - executed');
     await app.close();
   }, liveLivenessTimeInMillis);
-
 }
 bootstrap();
