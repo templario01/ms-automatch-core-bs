@@ -48,6 +48,7 @@ model FavoriteVehicle {
   accountId                 String?
 
   @@map("favorite_vehicle")
+  @@unique([vehicleId, accountId])
 }
 
 model EmailVerificationCode {

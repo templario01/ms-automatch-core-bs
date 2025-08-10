@@ -4,7 +4,7 @@ import { ClientProxy } from '@nestjs/microservices';
 import { AUTOMATCH_EMAIL_NOTIFICATION } from 'src/core/event-broker/dtos/services';
 import { lastValueFrom, tap } from 'rxjs';
 import { obfuscateEmail } from 'src/core/utils/obfuscate.utils';
-import { SoldVehicleEventDto } from '../infrastructure/input/dtos/event/incoming-sold-vehicle-event.dto copy';
+import { SoldVehicleEventDto } from '../infrastructure/input/dtos/event/incoming-sold-vehicle-event.dto';
 import { NotifyUserSoldVehicleEventDto } from '../infrastructure/input/dtos/event/outcoming-sold-vehicle-event.dto';
 
 @Injectable()

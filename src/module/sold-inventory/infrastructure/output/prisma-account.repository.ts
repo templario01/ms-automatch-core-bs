@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { NotificationStatus } from '@prisma/client';
 import { PrismaService } from 'src/core/database/prisma.service';
-import { Account } from '../../domain/entities/account';
 import { IAccountRepository } from '../../domain/repositories/account.repository';
 import { AccountWithRelations } from 'src/core/database/types/account.type';
+import { Account } from 'src/module/account/domain/entities/account';
 
 @Injectable()
 export class PrismaAccountRepository implements IAccountRepository {

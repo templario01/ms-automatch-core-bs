@@ -54,7 +54,12 @@ export class AuthUseCase {
     if (!isValidPassword) {
       throw new UnauthorizedException('Contraseña inválida');
     }
-    return this.registerNewSession(user.id, user.email, userAgent);
+    return this.registerNewSession(
+      user.id,
+      user.email,
+      user.account.id,
+      userAgent,
+    );
   }
 
   async register(data: CreateUser): Promise<VerificationCode> {
@@ -83,7 +88,11 @@ export class AuthUseCase {
       throw new BadRequestException('Correo ya confirmado');
     }
     const verifiedUser = await this.authRepository.validateAccount(user.id);
-    const payload = { username: verifiedUser.email, sub: verifiedUser.id };
+    const payload = {
+      username: verifiedUser.email,
+      sub: verifiedUser.id,
+      accountId: verifiedUser.account.id,
+    };
 
     return this.authService.createAccessToken(payload);
   }
@@ -113,9 +122,10 @@ export class AuthUseCase {
   private async registerNewSession(
     userId: string,
     email: string,
+    accountId: string,
     userAgent: string,
   ): Promise<AccessToken> {
-    const payload = { username: email, sub: userId };
+    const payload = { username: email, sub: userId, accountId };
     await this.authRepository.registerSession(userId);
     this.logger.verbose(
       `New session registered: ${JSON.stringify({ userId, userAgent })}`,

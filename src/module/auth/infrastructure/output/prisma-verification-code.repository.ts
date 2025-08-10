@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../../core/database/prisma.service';
+import { PrismaService } from '../../../../core/database/prisma.service';
 import { randAlphaNumeric } from '@ngneat/falso';
 import {
   NotificationStatus,
   VerificationCode,
-} from '../domain/entities/validation-code';
-import { IVerificationCodeRepository } from '../domain/repositories/verification-code.repository';
+} from '../../domain/entities/validation-code';
+import { IVerificationCodeRepository } from '../../domain/repositories/verification-code.repository';
 
 @Injectable()
 export class PrismaVerificationCodeRepository

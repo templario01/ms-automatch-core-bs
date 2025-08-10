@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../../core/database/prisma.service';
-import { User } from '../domain/entities/user';
-import { IAuthRepository } from '../domain/repositories/auth.repository';
+import { PrismaService } from '../../../../core/database/prisma.service';
+import { User } from '../../domain/entities/user';
+import { IAuthRepository } from '../../domain/repositories/auth.repository';
 
 @Injectable()
 export class PrismaAuthRepository implements IAuthRepository {
@@ -14,6 +14,9 @@ export class PrismaAuthRepository implements IAuthRepository {
           equals: email,
           mode: 'insensitive',
         },
+      },
+      include: {
+        account: true,
       },
     });
     return User.mapToObject(user);
@@ -52,15 +55,16 @@ export class PrismaAuthRepository implements IAuthRepository {
   }
 
   async validateAccount(id: string): Promise<User> {
-    const [user] = await this.prisma.$transaction([
+    const [user, account] = await this.prisma.$transaction([
       this.prisma.user.update({
         where: { id },
         data: { hasConfirmedEmail: true },
+        include: { account: true },
       }),
       this.prisma.account.create({ data: { userId: id } }),
     ]);
 
-    return User.mapToObject(user);
+    return User.mapToObject({ ...user, account });
   }
 
   async registerSession(id: string): Promise<void> {

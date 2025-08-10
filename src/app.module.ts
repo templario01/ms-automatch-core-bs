@@ -3,10 +3,12 @@ import { AuthModule } from './module/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
 import { EnvSettings, envSettings } from './core/settings/env.settings';
+import { AccountModule } from './module/account/account.module';
 
 @Module({
   imports: [
     AuthModule,
+    AccountModule,
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: Joi.object<EnvSettings>(envSettings),

@@ -10,7 +10,6 @@ import { Prisma } from '@prisma/client';
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
   catch(error) {
-    console.log(error);
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       throw new UnprocessableEntityException();
     }

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { FavoriteVehicle } from '../entities/favorite-vehicle';
-import { Account } from '../entities/account';
+import { Account } from 'src/module/account/domain/entities/account';
+
 
 @Injectable()
 export abstract class IAccountRepository {
