@@ -7,6 +7,10 @@ export class BrokerService {
   constructor(private readonly configService: ConfigService) {}
 
   getOptions(queue: string, noAck = false): RmqOptions {
+    console.log(
+      'queue',
+      this.configService.get<string>(`RABBIT_MQ_${queue}_QUEUE`),
+    );
     return {
       transport: Transport.RMQ,
       options: {

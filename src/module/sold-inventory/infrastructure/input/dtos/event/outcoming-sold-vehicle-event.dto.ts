@@ -1,23 +1,12 @@
-type Website = {
-  id: string;
-  name: string;
-  url: string;
-  status: 'ACTIVE' | 'INACTIVE';
-  createdAt: string;
-  updatedAt: string;
-};
-
-type Vehicle = {
+type VehicleInformation = Readonly<{
   id: string;
   externalId: string;
   url: string;
   name: string;
   description: string | null;
   year: number;
-  transmission: string | null;
   mileage: number;
   frontImage: string;
-  images: string[] | null;
   location: string;
   condition: 'USED' | 'NEW';
   originalPrice: number;
@@ -25,11 +14,17 @@ type Vehicle = {
   currency: 'USD' | 'PEN';
   createdAt: string;
   updatedAt: string;
-  websiteId: string;
   status: 'ACTIVE' | 'INACTIVE';
-  website: Website;
-};
+  website: string;
+}>;
 
-export type VehiclePayload = {
-  soldVehicles: Vehicle[];
-}
+type SoldFavoriteVehicle = Readonly<{
+  favoriteVehicleId: string;
+  vehicle: VehicleInformation;
+}>;
+
+export type NotifyUserSoldVehicleEventDto = Readonly<{
+  email: string;
+  accountId: string;
+  soldVehicles: SoldFavoriteVehicle[];
+}>;

@@ -6,6 +6,7 @@ import { IAuthRepository } from '../domain/repositories/auth.repository';
 @Injectable()
 export class PrismaAuthRepository implements IAuthRepository {
   constructor(private readonly prisma: PrismaService) {}
+
   async findUserByEmail(email: string): Promise<User> {
     const user = await this.prisma.user.findFirst({
       where: {
@@ -18,9 +19,14 @@ export class PrismaAuthRepository implements IAuthRepository {
     return User.mapToObject(user);
   }
 
-  async findUserWithActiveVerificationCode(code: string): Promise<User> {
+  async findUserWithActiveVerificationCode(
+    email: string,
+    code: string,
+  ): Promise<User> {
     const user = await this.prisma.user.findFirst({
       where: {
+        email,
+        hasConfirmedEmail: false,
         emailValidationCodes: {
           some: {
             code,

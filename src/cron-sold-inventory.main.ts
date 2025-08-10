@@ -15,7 +15,7 @@ async function bootstrap() {
   const eventBroker = app.get<BrokerService>(BrokerService);
   const connection = eventBroker.getOptions(AUTOMATCH_SOLD_INVENTORY);
   app.connectMicroservice(connection);
-  logger.log(`[Consumer] Connecting to RabbitMQ queue: : ${connection.options.queue} 📦`);
+  logger.verbose(`[Consumer] Connecting to RabbitMQ queue: ${connection.options.queue} 📦`);
 
   const port = app.get(ConfigService).get<number>('PORT');
   const liveLivenessTimeInMillis =

@@ -29,15 +29,6 @@ export class AuthController {
     return this.authUseCase.register(createUser);
   }
 
-  @ApiOperation({ summary: 'Login' })
-  @ApiOkResponse({
-    type: AccessTokenDto,
-  })
-  @Post('sign-in')
-  async signIn(@Body() user: SignInDto): Promise<AccessTokenDto> {
-    return this.authUseCase.login(user);
-  }
-
   @ApiOperation({ summary: 'Verify user' })
   @ApiOkResponse({
     type: AccessTokenDto,
@@ -46,7 +37,7 @@ export class AuthController {
   async validateCode(
     @Body() validateCode: ValidateCodeDto,
   ): Promise<AccessTokenDto> {
-    return this.authUseCase.confirmAccount(validateCode.code);
+    return this.authUseCase.confirmAccount(validateCode);
   }
 
   @ApiOperation({ summary: 'Resend verification code' })
@@ -58,5 +49,14 @@ export class AuthController {
     @Body() { email }: ResendUserCodeDto,
   ): Promise<VerificationCodeDto> {
     return this.authUseCase.resendEmailVerification(email);
+  }
+
+  @ApiOperation({ summary: 'Login' })
+  @ApiOkResponse({
+    type: AccessTokenDto,
+  })
+  @Post('sign-in')
+  async signIn(@Body() user: SignInDto): Promise<AccessTokenDto> {
+    return this.authUseCase.login(user);
   }
 }

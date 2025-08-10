@@ -18,6 +18,9 @@ import { AUTOMATCH_EMAIL_NOTIFICATION } from '../../../core/event-broker/dtos/se
 import { lastValueFrom, tap } from 'rxjs';
 import { UserSignIn } from '../domain/entities/sign-in';
 import { obfuscateEmail } from 'src/core/utils/obfuscate.utils';
+import { VerifyAuthCode } from '../domain/entities/verify-auth-code';
+
+const NOTIFY_USER_EMAIL_ROUTING_KEY = 'notify.user.email';
 
 @Injectable()
 export class AuthUseCase {
@@ -68,9 +71,11 @@ export class AuthUseCase {
     return this.createUser(email, password);
   }
 
-  async confirmAccount(code: string): Promise<AccessToken> {
-    const user =
-      await this.authRepository.findUserWithActiveVerificationCode(code);
+  async confirmAccount(data: VerifyAuthCode): Promise<AccessToken> {
+    const user = await this.authRepository.findUserWithActiveVerificationCode(
+      data.email,
+      data.code,
+    );
     if (!user) {
       throw new ForbiddenException('Código inválido');
     }
@@ -133,13 +138,18 @@ export class AuthUseCase {
     const randomCode =
       await this.verificationCodeRepository.generateVerificationCode();
     const payload = Buffer.from(
-      JSON.stringify({ email, verificationCode: randomCode }),
+      JSON.stringify({
+        email,
+        subject: 'Código de verificación Automatch',
+        body: { verificationCode: randomCode },
+        templateId: 'confirmationUserEmail',
+      }),
     ).toString('base64');
     await lastValueFrom(
-      this.notificationClient.emit('notify_user_email', payload).pipe(
+      this.notificationClient.emit(NOTIFY_USER_EMAIL_ROUTING_KEY, payload).pipe(
         tap(() => {
           this.logger.verbose(
-            `[Producer] Sending new verification code to: ${obfuscateEmail(email)}`,
+            `[Producer] Publish to routingKey=${NOTIFY_USER_EMAIL_ROUTING_KEY} verification code ${randomCode} for email: ${obfuscateEmail(email)} `,
           );
         }),
       ),
