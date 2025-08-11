@@ -3,7 +3,6 @@ import { plainToInstance } from 'class-transformer';
 
 export class FavoriteVehicle {
   readonly id: string;
-  readonly accountId: string;
   readonly vehicleId: string;
   readonly deletedNotificationStatus: string;
 
@@ -11,7 +10,6 @@ export class FavoriteVehicle {
     if (!data) return null;
     return plainToInstance(FavoriteVehicle, {
       id: data.id,
-      accountId: data.accountId,
       vehicleId: data.vehicleId,
       deletedNotificationStatus: data.deletedNotificationStatus,
     } as FavoriteVehicle);

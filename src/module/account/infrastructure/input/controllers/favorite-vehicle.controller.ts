@@ -2,16 +2,20 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   HttpCode,
   HttpStatus,
   Param,
   Post,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
+  ApiOkResponse,
   ApiOperation,
+  ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import {
@@ -22,13 +26,16 @@ import { AddFavoriteVehicleUseCase } from 'src/module/account/application/add-fa
 import { RemoveFavoriteVehicleUseCase } from 'src/module/account/application/remove-favorite-vehicle.use-case';
 import { AddFavoriteVehicleDto } from '../dtos/request/add-favorite-vehicle.dto';
 import { AuthGuard } from 'src/module/auth/infrastructure/input/guards/auth.guard';
+import { GetAllFavoriteVehiclesUseCase } from 'src/module/account/application/get-all-favorite-vehicles.use.case';
+import { FavoriteVehicleDto } from '../dtos/response/favorite-vehicle.dto';
 
-@ApiTags('account/favorite-vehicle')
+@ApiTags('account')
 @Controller('account/favorite-vehicle')
-export class AccountController {
+export class FavoriteVehicleController {
   constructor(
     private readonly removeFavoriteVehicleUseCase: RemoveFavoriteVehicleUseCase,
     private readonly addFavoriteVehicleUseCase: AddFavoriteVehicleUseCase,
+    private readonly getAllFavoriteVehiclesUseCase: GetAllFavoriteVehiclesUseCase,
   ) {}
 
   @UseGuards(AuthGuard)
@@ -55,5 +62,18 @@ export class AccountController {
     @Param('favoriteVehicleId') favoriteVehicleId: string,
   ): Promise<void> {
     return this.removeFavoriteVehicleUseCase.execute(favoriteVehicleId);
+  }
+
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'List all favorite vehicles' })
+  @ApiOkResponse({
+    type: FavoriteVehicleDto,
+  })
+  @Get()
+  async getAllFavoriteVehicles(
+    @CurrentUser() user: SessionData,
+  ): Promise<FavoriteVehicleDto[]> {
+    return this.getAllFavoriteVehiclesUseCase.execute(user.accountId);
   }
 }

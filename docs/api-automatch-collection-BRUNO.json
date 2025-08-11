@@ -1,0 +1,277 @@
+{
+  "name": "automatch collection",
+  "version": "1",
+  "items": [
+    {
+      "type": "folder",
+      "name": "ms-automatch-core",
+      "filename": "ms-automatch-core",
+      "seq": 2,
+      "root": {
+        "request": {
+          "auth": {
+            "mode": "inherit"
+          }
+        },
+        "meta": {
+          "name": "ms-automatch-core",
+          "seq": 2
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "Create favorite vehicle",
+          "filename": "Create favorite vehicle.bru",
+          "seq": 1,
+          "settings": {
+            "encodeUrl": true
+          },
+          "tags": [],
+          "request": {
+            "url": "http://localhost:3000/v1/account/favorite-vehicle",
+            "method": "POST",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"vehicleId\": \"6855b2f1d424d3fc9622d442\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {
+              "req": [
+                {
+                  "name": "jwt",
+                  "value": "",
+                  "enabled": true,
+                  "local": false
+                }
+              ]
+            },
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "bearer",
+              "bearer": {
+                "token": "{{jwt}}"
+              }
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Delete favorite vehicle",
+          "filename": "Delete favorite vehicle.bru",
+          "seq": 2,
+          "settings": {
+            "encodeUrl": true
+          },
+          "tags": [],
+          "request": {
+            "url": "http://localhost:3000/v1/account/favorite-vehicle/8c90358b-ac12-4f17-bf52-81b98ca09bf8",
+            "method": "DELETE",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "json": "{\n  \"vehicleId\": \"6855b2f1d424d3fc9622d442\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "bearer",
+              "bearer": {
+                "token": "{{jwt}}"
+              }
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "List all favorite vehicles",
+          "filename": "List all favorite vehicles.bru",
+          "seq": 3,
+          "settings": {
+            "encodeUrl": true
+          },
+          "tags": [],
+          "request": {
+            "url": "http://localhost:3000/v1/account/favorite-vehicle",
+            "method": "GET",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "json": "{\n  \"vehicleId\": \"6855b2f1d424d3fc9622d442\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "bearer",
+              "bearer": {
+                "token": "{{jwt}}"
+              }
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Get Account",
+          "filename": "Get Account.bru",
+          "seq": 4,
+          "settings": {
+            "encodeUrl": true
+          },
+          "tags": [],
+          "request": {
+            "url": "http://localhost:3000/v1/account",
+            "method": "GET",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "json": "{\n  \"vehicleId\": \"6855b2f1d424d3fc9622d442\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "bearer",
+              "bearer": {
+                "token": "{{jwt}}"
+              }
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Update Account",
+          "filename": "Update Account.bru",
+          "seq": 5,
+          "settings": {
+            "encodeUrl": true
+          },
+          "tags": [],
+          "request": {
+            "url": "http://localhost:3000/v1/account",
+            "method": "PATCH",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"hasActiveNotifications\": true\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "bearer",
+              "bearer": {
+                "token": "{{jwt}}"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "automatch-autentication",
+      "filename": "automatch-autentication",
+      "seq": 2,
+      "root": {
+        "request": {
+          "auth": {
+            "mode": "inherit"
+          }
+        },
+        "meta": {
+          "name": "automatch-autentication"
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "Login",
+          "filename": "Login.bru",
+          "seq": 5,
+          "settings": {
+            "encodeUrl": true
+          },
+          "tags": [],
+          "request": {
+            "url": "http://localhost:3000/v1/auth/sign-in",
+            "method": "POST",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"email\": \"user@gmail.com\",\n  \"password\": \"123\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {
+              "res": [
+                {
+                  "name": "jwt",
+                  "value": "res.body.token",
+                  "enabled": true,
+                  "local": false
+                }
+              ]
+            },
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "bearer",
+              "bearer": {
+                "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXJAZ21haWwuY29tIiwic3ViIjoiZDNlZGEyZjItMjRjMC00ZmFlLWI5Y2MtMjJhMjUzZDRhZTM3IiwiYWNjb3VudElkIjoiODE0NDliMGYtOWYzMS00ZmY2LThhM2UtODc5Y2Q4YWRlNTZhIiwiaWF0IjoxNzU0ODQyNTU5LCJleHAiOjE3NTQ5Mjg5NTl9.X931rFIuLVDR5jtAUgtcdfSJ_KVP71KBGoS9UjwXo2U"
+              }
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "environments": [],
+  "brunoConfig": {
+    "version": "1",
+    "name": "automatch collection",
+    "type": "collection",
+    "ignore": [
+      "node_modules",
+      ".git"
+    ],
+    "size": 0.0012044906616210938,
+    "filesCount": 3
+  }
+}

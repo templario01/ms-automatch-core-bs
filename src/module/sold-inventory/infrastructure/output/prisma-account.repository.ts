@@ -15,6 +15,7 @@ export class PrismaAccountRepository implements IAccountRepository {
     const accounts: Awaited<AccountWithRelations[]> =
       await this.prisma.account.findMany({
         where: {
+          hasActiveNotifications: true,
           favoriteVehicles: {
             some: {
               vehicleId: {
