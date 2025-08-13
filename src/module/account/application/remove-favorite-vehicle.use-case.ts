@@ -7,7 +7,10 @@ export class RemoveFavoriteVehicleUseCase {
     private readonly favoriteVehicleRepository: IFavoriteVehicleRepository,
   ) {}
 
-  async execute(favoriteVehicleId: string): Promise<void> {
-    await this.favoriteVehicleRepository.deleteFavoriteVehicle(favoriteVehicleId);
+  async execute(accountId: string, vehicleId: string): Promise<void> {
+    await this.favoriteVehicleRepository.deleteFavoriteVehicle(
+      accountId,
+      vehicleId,
+    );
   }
 }

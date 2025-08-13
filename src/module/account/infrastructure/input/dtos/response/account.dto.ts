@@ -1,4 +1,5 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
+import { FavoriteVehicleDto } from './favorite-vehicle.dto';
 
 export class AccountDto {
   @ApiProperty({
@@ -18,4 +19,10 @@ export class AccountDto {
     example: '',
   })
   readonly createdAt: Date;
+
+  @ApiProperty({
+    type: FavoriteVehicleDto,
+    description: 'List of favorite vehicles',
+  })
+  readonly favoriteVehicles?: FavoriteVehicleDto[];
 }

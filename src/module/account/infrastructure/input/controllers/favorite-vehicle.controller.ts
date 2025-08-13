@@ -57,11 +57,12 @@ export class FavoriteVehicleController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Remove vehicle from favorite list' })
   @HttpCode(HttpStatus.NO_CONTENT)
-  @Delete(':favoriteVehicleId')
+  @Delete(':vehicleId')
   async removeFavoriteVehicle(
-    @Param('favoriteVehicleId') favoriteVehicleId: string,
+    @Param('vehicleId') vehicleId: string,
+    @CurrentUser() user: SessionData,
   ): Promise<void> {
-    return this.removeFavoriteVehicleUseCase.execute(favoriteVehicleId);
+    return this.removeFavoriteVehicleUseCase.execute(user.accountId, vehicleId);
   }
 
   @UseGuards(AuthGuard)

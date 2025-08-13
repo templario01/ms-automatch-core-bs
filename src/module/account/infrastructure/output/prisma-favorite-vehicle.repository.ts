@@ -4,7 +4,9 @@ import { FavoriteVehicle } from '../../domain/entities/favorite-vehicle';
 import { IFavoriteVehicleRepository } from '../../domain/repositories/favorite-vehicle.repository';
 
 @Injectable()
-export class PrismaFavoriteVehicleRepository implements IFavoriteVehicleRepository {
+export class PrismaFavoriteVehicleRepository
+  implements IFavoriteVehicleRepository
+{
   constructor(private readonly prisma: PrismaService) {}
 
   async createFavoriteVehicle(
@@ -19,10 +21,13 @@ export class PrismaFavoriteVehicleRepository implements IFavoriteVehicleReposito
     });
   }
 
-  async deleteFavoriteVehicle(id: string): Promise<void> {
+  async deleteFavoriteVehicle(
+    accountId: string,
+    vehicleId: string,
+  ): Promise<void> {
     await this.prisma.favoriteVehicle.delete({
       where: {
-        id,
+        vehicleId_accountId: { accountId, vehicleId },
       },
     });
   }

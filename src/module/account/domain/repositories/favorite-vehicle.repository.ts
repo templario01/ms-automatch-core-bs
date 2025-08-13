@@ -7,7 +7,7 @@ export abstract class IFavoriteVehicleRepository {
     accountId: string,
     vehicleId: string,
   ): Promise<void>;
-  abstract deleteFavoriteVehicle(id: string): Promise<void>;
+  abstract deleteFavoriteVehicle(accountId: string, id: string): Promise<void>;
   abstract findFavoriteVehiclesByAccountId(
     accountId: string,
   ): Promise<FavoriteVehicle[]>;
