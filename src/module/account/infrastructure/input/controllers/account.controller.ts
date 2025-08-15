@@ -48,7 +48,6 @@ export class AccountController {
     @Body() body: UpdateAccountDto,
     @CurrentUser() user: SessionData,
   ): Promise<AccountDto> {
-    console.log(body)
     return this.updateAccountUseCase.execute(
       user.accountId,
       body.hasActiveNotifications as boolean,

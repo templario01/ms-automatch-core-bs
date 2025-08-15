@@ -17,7 +17,7 @@ async function bootstrap() {
   app.connectMicroservice(connection);
   logger.verbose(`[Consumer] Connecting to RabbitMQ queue: ${connection.options.queue} 📦`);
 
-  const port = app.get(ConfigService).get<number>('PORT');
+  const port = app.get(ConfigService).get<number>('CRONJOB_PORT');
   const liveLivenessTimeInMillis =
     app.get(ConfigService).get<number>('LIVE_LIVENESS_TIME_IN_MINUTES') * 60000;
 

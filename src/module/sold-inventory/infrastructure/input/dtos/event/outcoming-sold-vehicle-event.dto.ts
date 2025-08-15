@@ -5,10 +5,10 @@ type VehicleInformation = Readonly<{
   name: string;
   description: string | null;
   year: number;
-  mileage: number;
+  mileage: string;
   frontImage: string;
   location: string;
-  condition: 'USED' | 'NEW';
+  condition: string;
   originalPrice: number;
   price: number;
   currency: 'USD' | 'PEN';
@@ -26,5 +26,5 @@ type SoldFavoriteVehicle = Readonly<{
 export type NotifyUserSoldVehicleEventDto = Readonly<{
   email: string;
   accountId: string;
-  soldVehicles: SoldFavoriteVehicle[];
+  vehicles: SoldFavoriteVehicle[];
 }>;

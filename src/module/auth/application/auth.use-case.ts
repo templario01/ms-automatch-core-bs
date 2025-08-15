@@ -19,8 +19,7 @@ import { lastValueFrom, tap } from 'rxjs';
 import { UserSignIn } from '../domain/entities/sign-in';
 import { obfuscateEmail } from 'src/core/utils/obfuscate.utils';
 import { VerifyAuthCode } from '../domain/entities/verify-auth-code';
-
-const NOTIFY_USER_EMAIL_ROUTING_KEY = 'notify.user.email';
+import { NOTIFY_USER_EMAIL_ROUTING_KEY } from 'src/core/event-broker/constants/routing-key';
 
 @Injectable()
 export class AuthUseCase {
