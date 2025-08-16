@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { AuthUseCase } from '../../../application/auth.use-case';
 import { CreateUserDto } from '../dtos/request/create-user.dto';
 import { ValidateCodeDto } from '../dtos/request/validate-code.dto';
@@ -33,6 +33,7 @@ export class AuthController {
   @ApiOkResponse({
     type: AccessTokenDto,
   })
+  @HttpCode(HttpStatus.OK)
   @Post('validate-code')
   async validateCode(
     @Body() validateCode: ValidateCodeDto,
