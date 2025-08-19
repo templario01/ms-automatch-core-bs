@@ -20,6 +20,9 @@ export class AccountRepository implements IAccountRepository {
       where: {
         id,
       },
+      include: {
+        favoriteVehicles: true,
+      },
     });
 
     return Account.mapToObject(account);

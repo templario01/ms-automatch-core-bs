@@ -22,6 +22,7 @@ COPY --chown=node:node package*.json ./
 COPY --chown=node:node --from=development /usr/src/app/node_modules ./node_modules
 COPY --chown=node:node . .
 
+RUN npx prisma migrate deploy
 RUN npx prisma generate
 RUN npm run build
 ENV NODE_ENV=production
