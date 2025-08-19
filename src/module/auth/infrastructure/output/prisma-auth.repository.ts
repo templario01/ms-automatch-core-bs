@@ -2,10 +2,29 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../../core/database/prisma.service';
 import { User } from '../../domain/entities/user';
 import { IAuthRepository } from '../../domain/repositories/auth.repository';
+import { AuthProvider } from '../../domain/entities/auth-provider';
 
 @Injectable()
 export class PrismaAuthRepository implements IAuthRepository {
   constructor(private readonly prisma: PrismaService) {}
+
+  async createUserByExternalProvider(
+    email: string,
+    authProvider: AuthProvider,
+  ): Promise<User> {
+    const newUser = await this.prisma.user.create({
+      data: {
+        email,
+        hasConfirmedEmail: true,
+        authProviders: [AuthProvider[authProvider]],
+        account: { create: {} },
+      },
+      include: {
+        account: true,
+      },
+    });
+    return User.mapToObject(newUser);
+  }
 
   async findUserByEmail(email: string): Promise<User> {
     const user = await this.prisma.user.findFirst({
@@ -49,6 +68,7 @@ export class PrismaAuthRepository implements IAuthRepository {
         email,
         hasConfirmedEmail: false,
         password: encryptedPassword,
+        authProviders: [AuthProvider.LOCAL],
       },
     });
     return User.mapToObject(newUser);

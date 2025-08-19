@@ -12,9 +12,11 @@ import { EnvConfigModule } from '../../core/settings/env-config.module';
 import { EnvConfigService } from '../../core/settings/env-config.service';
 import { BrokerModule } from '../../core/event-broker/broker.module';
 import { AUTOMATCH_EMAIL_NOTIFICATION } from '../../core/event-broker/dtos/services';
+import { GoogleAuthController } from './infrastructure/input/controllers/google-auth.controller';
+import { SignInWithGoogleUseCase } from './application/sign-in-with-google.use-case';
+import { GoogleAuthService } from './application/services/google.auth.service';
 
-
-const useCases = [AuthUseCase];
+const useCases = [AuthUseCase, SignInWithGoogleUseCase];
 const repositories = [
   { provide: IAuthRepository, useClass: PrismaAuthRepository },
   {
@@ -42,7 +44,7 @@ const repositories = [
       },
     }),
   ],
-  controllers: [AuthController],
-  providers: [AuthService, ...useCases, ...repositories],
+  controllers: [AuthController, GoogleAuthController],
+  providers: [AuthService, GoogleAuthService, ...useCases, ...repositories],
 })
 export class AuthModule {}

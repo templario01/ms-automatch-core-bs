@@ -5,7 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider        = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -16,7 +16,9 @@ datasource db {
 model User {
   id                   String                  @id @unique @default(uuid())
   email                String                  @unique
-  password             String
+  password             String?
+  name                 String?
+  authProviders        AuthProvider[]          @default([LOCAL]) @map("auth_providers")
   refreshToken         String?                 @map("refresh_token")
   lastSession          DateTime                @default(now()) @map("lat_session")
   hasConfirmedEmail    Boolean                 @default(false) @map("has_confirmed_email")
@@ -47,8 +49,8 @@ model FavoriteVehicle {
   deletedNotificationStatus NotificationStatus @default(WAITING)
   accountId                 String?
 
-  @@map("favorite_vehicle")
   @@unique([vehicleId, accountId])
+  @@map("favorite_vehicle")
 }
 
 model EmailVerificationCode {
@@ -69,4 +71,10 @@ enum NotificationStatus {
   READY_TO_SEND
   FAILED
   SENT
+}
+
+enum AuthProvider {
+  LOCAL
+  GOOGLE
+  FACEBOOK
 }

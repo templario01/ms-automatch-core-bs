@@ -16,12 +16,17 @@ export class EnvConfigService {
     return {
       secret: this.configService.get<string>('JWT_SECRET'),
       expirationTime: this.configService.get<string>('JWT_EXPIRATION_TIME'),
+      google: {
+        clientId: this.configService.get<string>('GOOGLE_CLIENT_ID'),
+      },
     };
   }
 
   get soldInventoryConfig() {
     return {
-      liveLivenessTimeInMinutes: this.configService.get<string>('LIVE_LIVENESS_TIME_IN_MINUTES'),
+      liveLivenessTimeInMinutes: this.configService.get<string>(
+        'LIVE_LIVENESS_TIME_IN_MINUTES',
+      ),
     };
   }
 }
