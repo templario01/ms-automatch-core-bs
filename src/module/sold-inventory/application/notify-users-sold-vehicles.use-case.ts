@@ -7,13 +7,8 @@ import { SoldVehicleEventDto } from '../infrastructure/input/dtos/event/incoming
 import { NotifyUserSoldVehicleEventDto } from '../infrastructure/input/dtos/event/outcoming-sold-vehicle-event.dto';
 import { AUTOMATCH_EMAIL_NOTIFICATION } from 'src/core/event-broker/dtos/services';
 import { NOTIFY_USER_EMAIL_ROUTING_KEY } from 'src/core/event-broker/constants/routing-key';
-import { IFavoriteVehicleRepository } from '../domain/entities/favorite-vehicle.repository';
 import { format } from 'date-fns';
-
 import { es } from 'date-fns/locale';
-
-const fechaStr = '14 de agosto del 2024';
-const timezone = 'America/Lima';
 
 @Injectable()
 export class NotifyUsersSoldVehiclesUseCase {
@@ -21,7 +16,6 @@ export class NotifyUsersSoldVehiclesUseCase {
 
   constructor(
     private readonly accountRepository: IAccountRepository,
-    private readonly favoriteVehicleRepository: IFavoriteVehicleRepository,
     @Inject(AUTOMATCH_EMAIL_NOTIFICATION)
     private notificationClient: ClientProxy,
   ) {}

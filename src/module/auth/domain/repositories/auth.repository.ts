@@ -3,7 +3,7 @@ import { User } from '../entities/user';
 import { AuthProvider } from '../entities/auth-provider';
 
 @Injectable()
-export abstract class IAuthRepository {
+export abstract class IUserRepository {
   abstract findUserByEmail(email: string): Promise<User>;
   abstract registerSession(id: string): Promise<void>;
   abstract createUser(email: string, encryptedPassword: string): Promise<User>;

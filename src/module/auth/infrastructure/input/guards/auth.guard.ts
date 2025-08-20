@@ -6,14 +6,14 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { EnvConfigService } from '../../../../../core/settings/env-config.service';
-import { IAuthRepository } from 'src/module/auth/domain/repositories/auth.repository';
+import { IUserRepository } from 'src/module/auth/domain/repositories/auth.repository';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
     private readonly jwtService: JwtService,
     private readonly envConfigService: EnvConfigService,
-    private readonly userRepository: IAuthRepository,
+    private readonly userRepository: IUserRepository,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { AuthUseCase } from './application/auth.use-case';
-import { IAuthRepository } from './domain/repositories/auth.repository';
-import { PrismaAuthRepository } from './infrastructure/output/prisma-auth.repository';
+import { ResendAuthVerificationCodeUseCase } from './application/resend-auth-verification-code.use-case';
+import { IUserRepository } from './domain/repositories/auth.repository';
+import { PrismaUserRepository } from './infrastructure/output/prisma-user.repository';
 import { PrismaModule } from '../../core/database/prisma.module';
 import { AuthController } from './infrastructure/input/controllers/auth.controller';
 import { IVerificationCodeRepository } from './domain/repositories/verification-code.repository';
@@ -15,10 +15,21 @@ import { AUTOMATCH_EMAIL_NOTIFICATION } from '../../core/event-broker/dtos/servi
 import { GoogleAuthController } from './infrastructure/input/controllers/google-auth.controller';
 import { SignInWithGoogleUseCase } from './application/sign-in-with-google.use-case';
 import { GoogleAuthService } from './application/services/google.auth.service';
+import { ConfirmAccountUseCase } from './application/confirm-account.use-case';
+import { LoginUserUseCase } from './application/login-user.use-case';
+import { RegisterUserUseCase } from './application/register-user.use-case';
+import { SendAuthVerificationCodeUseCase } from './application/send-auth-verification-code.use-case';
 
-const useCases = [AuthUseCase, SignInWithGoogleUseCase];
+const useCases = [
+  ResendAuthVerificationCodeUseCase,
+  ConfirmAccountUseCase,
+  LoginUserUseCase,
+  RegisterUserUseCase,
+  SendAuthVerificationCodeUseCase,
+  SignInWithGoogleUseCase,
+];
 const repositories = [
-  { provide: IAuthRepository, useClass: PrismaAuthRepository },
+  { provide: IUserRepository, useClass: PrismaUserRepository },
   {
     provide: IVerificationCodeRepository,
     useClass: PrismaVerificationCodeRepository,

@@ -7,8 +7,8 @@ import { IFavoriteVehicleRepository } from './domain/repositories/favorite-vehic
 import { PrismaFavoriteVehicleRepository } from './infrastructure/output/prisma-favorite-vehicle.repository';
 import { JwtModule } from '@nestjs/jwt';
 import { EnvConfigModule } from 'src/core/settings/env-config.module';
-import { IAuthRepository } from '../auth/domain/repositories/auth.repository';
-import { PrismaAuthRepository } from '../auth/infrastructure/output/prisma-auth.repository';
+import { IUserRepository } from '../auth/domain/repositories/auth.repository';
+import { PrismaUserRepository } from '../auth/infrastructure/output/prisma-user.repository';
 import { GetAllFavoriteVehiclesUseCase } from './application/get-all-favorite-vehicles.use.case';
 import { AccountController } from './infrastructure/input/controllers/account.controller';
 import { GetAccountInformationUseCase } from './application/get-account-information.use-case';
@@ -29,8 +29,8 @@ const repositories = [
     useClass: PrismaFavoriteVehicleRepository,
   },
   {
-    provide: IAuthRepository,
-    useClass: PrismaAuthRepository,
+    provide: IUserRepository,
+    useClass: PrismaUserRepository,
   },
   {
     provide: IAccountRepository,
